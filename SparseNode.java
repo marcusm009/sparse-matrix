@@ -47,6 +47,18 @@ public class SparseNode
     return data;
   }
 
+  public boolean checkCoords(int row, int col)
+  {
+    if(this.row == row && this.col == col)
+    {
+      return true;
+    }
+    else
+    {
+      return false;
+    }
+  }
+
   public void setData(int data)
   {
     this.data = data;
