@@ -38,6 +38,13 @@ public class SparseMatrix implements SparseInterface
       throw new ArrayIndexOutOfBoundsException();
     }
 
+    //If the data passed in is zero, it removes the element
+    if(data == 0)
+    {
+      removeElement(row, col);
+      return;
+    }
+
     //If the matrix is all zeros, it assigns head as the first entry
     if(head == null)
     {
@@ -258,7 +265,7 @@ public class SparseMatrix implements SparseInterface
     {
       //If the current node doesn't share the same column and row as the
       //arguments passed in, it is added to the minor
-      f(curNode.getCol() != col && curNode.getRow() != row)
+      if(curNode.getCol() != col && curNode.getRow() != row)
       {
         minor.addElement(curNode.getRow(), curNode.getCol(), curNode.getData());
       }
