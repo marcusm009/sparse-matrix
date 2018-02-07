@@ -24,8 +24,11 @@ public class SparseMatrix implements SparseInterface
 
   public void addElement(int row, int col, int data)
   {
-    //Sets the current to the head
+    //Sets the current to the head and previous node to null
     SparseNode curNode = head;
+    SparseNode prevNode = null;
+
+    SparseNode newNode = new SparseNode(row, col, data);
 
     //Throws an error if the specified row or col are out of bounds
     if(row > size || col > size || row < 0 || col < 0)
@@ -33,41 +36,93 @@ public class SparseMatrix implements SparseInterface
       throw new ArrayIndexOutOfBoundsException();
     }
 
-    //If there are no entries, it sets the specified entry as the head
-    if(entries == 0)
+    //If the matrix is all zeros, it assigns head as the first entry
+    if(head == null)
     {
-      head = new SparseNode(row, col, data);
+      head = newNode;
+      return;
     }
-    else
+
+    while(true)
     {
-      //Iterates through the linked list until it reaches the entry size
-      for(int i = 0; i < entries; i++)
+      //If the row is greater than the current row, it tries to iterate
+      if(row > curNode.getRow())
       {
-        //If the specified row and col already exist, it overwrites that node
-        if(curNode.getRow() == row && curNode.getCol() == col)
-        {
-          curNode.setData(data);
-          break;
-        }
-        //If the current node has a node after it, it sets the next node as
-        //current and continues to the next iteration
+        //If there is another node, then it iterates
         if(curNode.hasNext())
         {
+          prevNode = curNode;
           curNode = curNode.next();
-          continue;
         }
-        //If the current node doesn't have a next, it creates one
-        curNode.setNext(new SparseNode(row, col, data));
+        //Otherwise, it makes the last node point to the new node
+        else
+        {
+          curNode.setNext(newNode);
+          return;
+        }
+      }
+      //If the row is equal, it must then test the column
+      else if(row == curNode.getRow())
+      {
+        //If the column is greater than the current column, it either iterates
+        //or sets the final element to point to the new element
+        if(col > curNode.getCol())
+        {
+          if(curNode.hasNext())
+          {
+            prevNode = curNode;
+            curNode = curNode.next();
+          }
+          else
+          {
+            curNode.setNext(newNode);
+            return;
+          }
+        }
+        //If the row and column are equal, it overwrites the data
+        else if(col == curNode.getCol())
+        {
+          curNode.setData(data);
+          return;
+        }
+        //If the column is less than the current column, then it assigns the new
+        //node as the next element or sets the head (if it is the first element)
+        else
+        {
+          if(prevNode != null)
+          {
+            prevNode.setNext(newNode);
+          }
+          else
+          {
+            head = newNode;
+          }
+          newNode.setNext(curNode);
+          return;
+        }
+      }
+      //If the row is less than the current row, then it inserts it at that
+      //position (similar to above)
+      else
+      {
+        if(prevNode != null)
+        {
+          prevNode.setNext(newNode);
+        }
+        else
+        {
+          head = newNode;
+        }
+        newNode.setNext(curNode);
+        return;
       }
     }
-    //Increments the amount of elements
-    entries++;
   }
 
   public void removeElement(int row, int col)
   {
-    SparseNode prevNode = null;
     SparseNode curNode = head;
+    SparseNode prevNode = null;
 
     //Throws an error if the specified row or col are out of bounds
     if(row > size || col > size || row < 0 || col < 0)
@@ -76,43 +131,60 @@ public class SparseMatrix implements SparseInterface
     }
 
     //Doesn't do anything if the list is empty
-    if(entries == 0)
+    if(head == null)
     {
       return;
     }
-    //If the list is of length one, it checks if it the node is the correct
-    //one to be removed and takes appropriate action
-    else if(entries == 1)
+
+    //Iterates until it finds what it's looking for or reaches the end
+    while(true)
     {
-      if(curNode.checkCoords(row, col))
+      if(curNode.sameCoords(row, col))
       {
-        head = null;
-        entries--;
-        return;
-      }
-    }
-    //If the length is greater than two, it sets the current node to the next
-    //node and keeps the previous node as a backup
-    else
-    {
-      for(int i = 0; i < entries; i++)
-      {
-        if(curNode.checkCoords(row,col))
+        if(prevNode != null)
         {
-          if(i == 0)
+          if(curNode.hasNext())
           {
+            //Removes an element from the middle of the list by setting the
+            //previous node's next to the current node's next
+            prevNode.setNext(curNode.next());
+          }
+          else
+          {
+            //Removes the last element by setting the previous element's pointer
+            //to null
+            prevNode.setNext(null);
+          }
+        }
+        else
+        {
+          if(curNode.hasNext())
+          {
+            //Removes the first element by setting the head to the current
+            //element's next
             head = curNode.next();
           }
           else
           {
-            prevNode.setNext(curNode.next());
+            //Removes everything if it is the only element in the list
+            head = null;
           }
-          break;
         }
-        prevNode = curNode;
-        curNode = prevNode.next();
+        return;
       }
-      entries--;
+      else
+      {
+        //Iterates by updating the current node
+        if(curNode.hasNext())
+        {
+          prevNode = curNode;
+          curNode = curNode.next();
+        }
+        else
+        {
+          return;
+        }
+      }
     }
   }
 
@@ -127,23 +199,33 @@ public class SparseMatrix implements SparseInterface
       throw new ArrayIndexOutOfBoundsException();
     }
 
-    //Iterates through the linked list until it reaches the entry size
-    for(int i = 0; i < entries; i++)
+    //Doesn't do anything if the list is empty
+    if(head == null)
+    {
+      return 0;
+    }
+
+    //Iterates through the linked list until it reaches what it's looking for
+    //or the size of the list
+    while(true)
     {
       //If the specified row and col have a non-zero element, it returns it
       if(curNode.getRow() == row && curNode.getCol() == col)
       {
         return(curNode.getData());
       }
+
       //If the current node has a node after it, it sets the next node as
       //current and continues to the next iteration
       if(curNode.hasNext())
       {
         curNode = curNode.next();
+        continue;
       }
+
+      //If the row-col combination isn't found in the list, it returns 0
+      return 0;
     }
-    //If the row-col combination isn't found in the list, it returns 0
-    return 0;
   }
 
   public int determinant()
@@ -153,6 +235,43 @@ public class SparseMatrix implements SparseInterface
 
   public SparseInterface minor(int row, int col)
   {
+    SparseNode prevNode = null;
+    SparseNode curNode = head;
+
+    //Throws an error if the specified row or col are out of bounds
+    if(row > size || col > size || row < 0 || col < 0)
+    {
+      throw new ArrayIndexOutOfBoundsException();
+    }
+
+    //Doesn't do anything if the list is empty or 1x1
+    if(entries == 0 || entries == 1)
+    {
+      return null;
+    }
+
+    //If the length is greater than two, it sets the current node to the next
+    //node and keeps the previous node as a backup
+    else
+    {
+      for(int i = 0; i < entries; i++)
+      {
+        if(curNode.getRow() == row || curNode.getCol() == col)
+        {
+          if(i == 0)
+          {
+            head = curNode.next();
+          }
+          else
+          {
+            prevNode.setNext(curNode.next());
+          }
+          prevNode = curNode;
+          curNode = prevNode.next();
+          entries--;
+        }
+      }
+    }
     return null;
   }
 
@@ -161,7 +280,7 @@ public class SparseMatrix implements SparseInterface
     SparseNode curNode = head;
     String str = "";
 
-    if(entries != 0)
+    if(head != null)
     {
       //Iterates through
       while(curNode.hasNext())
