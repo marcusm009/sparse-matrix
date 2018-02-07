@@ -1,19 +1,21 @@
 public class SparseMatrix implements SparseInterface
 {
   private SparseNode head;
-  private int entries;
   private int size;
 
   public SparseMatrix()
   {
     size = 5;
-    entries = 0;
+  }
+
+  public SparseMatrix(int size)
+  {
+    this.size = size;
   }
 
   public void clear()
   {
     head = null;
-    entries = 0;
   }
 
   public void setSize(int size)
@@ -235,8 +237,10 @@ public class SparseMatrix implements SparseInterface
 
   public SparseInterface minor(int row, int col)
   {
-    SparseNode prevNode = null;
+    SparseMatrix minor = new SparseMatrix(this.size - 1);
+
     SparseNode curNode = head;
+    SparseNode prevNode = null;
 
     //Throws an error if the specified row or col are out of bounds
     if(row > size || col > size || row < 0 || col < 0)
@@ -244,35 +248,34 @@ public class SparseMatrix implements SparseInterface
       throw new ArrayIndexOutOfBoundsException();
     }
 
-    //Doesn't do anything if the list is empty or 1x1
-    if(entries == 0 || entries == 1)
+    //Doesn't do anything if the list is empty
+    if(head == null)
     {
       return null;
     }
 
-    //If the length is greater than two, it sets the current node to the next
-    //node and keeps the previous node as a backup
-    else
+    while(true)
     {
-      for(int i = 0; i < entries; i++)
+      //If the current node doesn't share the same column and row as the
+      //arguments passed in, it is added to the minor
+      f(curNode.getCol() != col && curNode.getRow() != row)
       {
-        if(curNode.getRow() == row || curNode.getCol() == col)
-        {
-          if(i == 0)
-          {
-            head = curNode.next();
-          }
-          else
-          {
-            prevNode.setNext(curNode.next());
-          }
-          prevNode = curNode;
-          curNode = prevNode.next();
-          entries--;
-        }
+        minor.addElement(curNode.getRow(), curNode.getCol(), curNode.getData());
+      }
+      //Iterates through the list
+      if(curNode.hasNext())
+      {
+        prevNode = curNode;
+        curNode = curNode.next();
+      }
+      //Exits the loop
+      else
+      {
+        break;
       }
     }
-    return null;
+    return minor;
+
   }
 
   public String toString()

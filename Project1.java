@@ -14,10 +14,10 @@ class Project1
 
     while(cont != 'n')
     {
-      System.out.println("Add, remove, get, clear, or print? (a/r/g/c/p)");
+      System.out.println("Add, remove, get, minor, clear, or print? (a/r/g/m/c/p)");
       char mode = scan.next().charAt(0);
 
-      if(mode == 'a' || mode == 'r' || mode == 'g')
+      if(mode == 'a' || mode == 'r' || mode == 'g' || mode == 'm')
       {
         System.out.println("Enter row");
         row = scan.nextInt();
@@ -46,6 +46,10 @@ class Project1
       else if(mode == 'p')
       {
         System.out.println(sm.toString());
+      }
+      else if(mode == 'm')
+      {
+        sm = (SparseMatrix) sm.minor(row, col);
       }
 
 
