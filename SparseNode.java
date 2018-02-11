@@ -66,6 +66,6 @@ public class SparseNode
 
   public String toString()
   {
-    return "Row: " + row + "Col: " + col + "Data: " + data;
+    return row + " " + col + " " + data;
   }
 }

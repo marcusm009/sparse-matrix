@@ -336,13 +336,13 @@ public class SparseMatrix implements SparseInterface
 
     if(head != null)
     {
-      //Iterates through
+      //Iterates through all the elements and strings together
       while(curNode.hasNext())
       {
-        str += "Row: " + curNode.getRow() + " Col: " + curNode.getCol() + " Data: " + curNode.getData() + "\n";
+        str += curNode.toString() + "\n";
         curNode = curNode.next();
       }
-      str += "Row: " + curNode.getRow() + " Col: " + curNode.getCol() + " Data: " + curNode.getData() + "\n";
+      str += curNode.toString() + "\n";
     }
     return str;
   }
