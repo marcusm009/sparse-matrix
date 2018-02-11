@@ -14,7 +14,7 @@ class Project1
 
     while(cont != 'n')
     {
-      System.out.println("Add, remove, get, minor, clear, or print? (a/r/g/m/c/p)");
+      System.out.println("Fill, add, remove, get, minor, determinant, clear, or print? (f/a/r/g/m/c/p)");
       char mode = scan.next().charAt(0);
 
       if(mode == 'a' || mode == 'r' || mode == 'g' || mode == 'm')
@@ -50,6 +50,23 @@ class Project1
       else if(mode == 'm')
       {
         sm = (SparseMatrix) sm.minor(row, col);
+      }
+      else if(mode == 'd')
+      {
+        System.out.println(sm.determinant());
+      }
+      else if(mode == 'f')
+      {
+        sm.setSize(3);
+        sm.addElement(0,0,3);
+        sm.addElement(0,2,1);
+        sm.addElement(1,1,2);
+        sm.addElement(2,2,4);
+        /*
+        sm.setSize(2);
+        sm.addElement(0,0,2);
+        sm.addElement(1,1,1);
+        */
       }
 
 

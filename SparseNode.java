@@ -63,4 +63,9 @@ public class SparseNode
   {
     this.data = data;
   }
+
+  public String toString()
+  {
+    return "Row: " + row + "Col: " + col + "Data: " + data;
+  }
 }

@@ -239,7 +239,42 @@ public class SparseMatrix implements SparseInterface
 
   public int determinant()
   {
-    return 0;
+    int total = 0;
+    SparseNode curNode = head;
+
+    //If the head is null, the matrix must be empty
+    if(head == null)
+    {
+      return 0;
+    }
+
+    //Returns the data if the matrix is 1x1
+    if(this.size == 1)
+    {
+      return head.getData();
+    }
+    else
+    {
+      //Uses the first row to take the determinant
+      while(curNode.getRow() == 0)
+      {
+
+        //Uses the recursive formula to add the determinant to the running total
+        total += Math.pow(-1,curNode.getRow() + curNode.getCol()) * curNode.getData() * minor(curNode.getRow(),curNode.getCol()).determinant();
+
+        //Iterates through the list
+        if(curNode.hasNext())
+        {
+          curNode = curNode.next();
+        }
+        else
+        {
+          break;
+        }
+      }
+      return total;
+    }
+
   }
 
   public SparseInterface minor(int row, int col)
@@ -265,9 +300,18 @@ public class SparseMatrix implements SparseInterface
     {
       //If the current node doesn't share the same column and row as the
       //arguments passed in, it is added to the minor
-      if(curNode.getCol() != col && curNode.getRow() != row)
+      int curRow = curNode.getRow();
+      int curCol = curNode.getCol();
+      if(curRow != row && curCol != col)
       {
-        minor.addElement(curNode.getRow(), curNode.getCol(), curNode.getData());
+        //Corrects the coordinates
+        if(curRow > row)
+          curRow--;
+        if(curCol > col)
+          curCol--;
+
+        //Adds the elements to the minor using the corrected coordinates
+        minor.addElement(curRow, curCol, curNode.getData());
       }
       //Iterates through the list
       if(curNode.hasNext())
