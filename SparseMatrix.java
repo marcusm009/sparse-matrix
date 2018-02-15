@@ -1,27 +1,28 @@
 public class SparseMatrix implements SparseInterface
 {
-  class SparseNode
+  //======= Node Class =========
+  class Node
   {
     private int data, row, col;
-    private SparseNode next;
+    private Node next;
 
-    public SparseNode()
+    public Node()
     {
     }
 
-    public SparseNode(int row, int col, int data)
+    public Node(int row, int col, int data)
     {
       this.row = row;
       this.col = col;
       this.data = data;
     }
 
-    public void setNext(SparseNode node)
+    public void setNext(Node node)
     {
       next = node;
     }
 
-    public SparseNode next()
+    public Node next()
     {
       return next;
     }
@@ -72,24 +73,29 @@ public class SparseMatrix implements SparseInterface
     }
   }
 
-  private SparseNode head;
+  //Private class variables
+  private Node head;
   private int size;
 
+  //Default constructor
   public SparseMatrix()
   {
     size = 5;
   }
 
+  //Constructor that sets size
   public SparseMatrix(int size)
   {
     this.size = size;
   }
 
+  //Clears the matrix by setting the head equal to null
   public void clear()
   {
     head = null;
   }
 
+  //Sets the size and clears the matrix
   public void setSize(int size)
   {
     this.size = size;
@@ -99,10 +105,10 @@ public class SparseMatrix implements SparseInterface
   public void addElement(int row, int col, int data)
   {
     //Sets the current to the head and previous node to null
-    SparseNode curNode = head;
-    SparseNode prevNode = null;
+    Node curNode = head;
+    Node prevNode = null;
 
-    SparseNode newNode = new SparseNode(row, col, data);
+    Node newNode = new Node(row, col, data);
 
     //Throws an error if the specified row or col are out of bounds
     if(row > size || col > size || row < 0 || col < 0)
@@ -202,8 +208,8 @@ public class SparseMatrix implements SparseInterface
 
   public void removeElement(int row, int col)
   {
-    SparseNode curNode = head;
-    SparseNode prevNode = null;
+    Node curNode = head;
+    Node prevNode = null;
 
     //Throws an error if the specified row or col are out of bounds
     if(row > size || col > size || row < 0 || col < 0)
@@ -272,7 +278,7 @@ public class SparseMatrix implements SparseInterface
   public int getElement(int row, int col)
   {
     //Sets the current to the head
-    SparseNode curNode = head;
+    Node curNode = head;
 
     //Throws an error if the specified row or col are out of bounds
     if(row > size || col > size || row < 0 || col < 0)
@@ -312,7 +318,7 @@ public class SparseMatrix implements SparseInterface
   public int determinant()
   {
     int total = 0;
-    SparseNode curNode = head;
+    Node curNode = head;
 
     //If the head is null, the matrix must be empty
     if(head == null)
@@ -353,8 +359,8 @@ public class SparseMatrix implements SparseInterface
   {
     SparseMatrix minor = new SparseMatrix(this.size - 1);
 
-    SparseNode curNode = head;
-    SparseNode prevNode = null;
+    Node curNode = head;
+    Node prevNode = null;
 
     //Throws an error if the specified row or col are out of bounds
     if(row > size || col > size || row < 0 || col < 0)
@@ -403,7 +409,7 @@ public class SparseMatrix implements SparseInterface
 
   public String toString()
   {
-    SparseNode curNode = head;
+    Node curNode = head;
     String str = "";
 
     if(head != null)
@@ -419,6 +425,7 @@ public class SparseMatrix implements SparseInterface
     return str;
   }
 
+  //Returns the size
   public int getSize()
   {
     return size;
