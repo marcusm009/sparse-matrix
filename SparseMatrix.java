@@ -1,6 +1,10 @@
 public class SparseMatrix implements SparseInterface
 {
+<<<<<<< HEAD
   //======= Node Class ========
+=======
+  //======= Node Class =========
+>>>>>>> 43b13989d1db44112a16939fb9c63119bd718758
   class Node
   {
     private int data, row, col;
