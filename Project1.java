@@ -57,11 +57,13 @@ class Project1
       }
       else if(mode == 'f')
       {
-        sm.setSize(3);
-        sm.addElement(0,0,3);
-        sm.addElement(0,2,1);
+        sm.setSize(5);
+        sm.addElement(0,0,1);
         sm.addElement(1,1,2);
-        sm.addElement(2,2,4);
+        sm.addElement(2,2,3);
+        sm.addElement(3,3,4);
+        sm.addElement(4,4,5);
+        sm.addElement(1,2,3);
         /*
         sm.setSize(2);
         sm.addElement(0,0,2);

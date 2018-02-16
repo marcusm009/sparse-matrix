@@ -87,7 +87,7 @@ public class SparseMatrix implements SparseInterface
   //Constructor that sets size
   public SparseMatrix(int size)
   {
-    this.size = size;
+    setSize(size);
   }
 
   //Clears the matrix by setting the head equal to null
@@ -99,6 +99,10 @@ public class SparseMatrix implements SparseInterface
   //Sets the size and clears the matrix
   public void setSize(int size)
   {
+    if(size <= 0)
+    {
+      throw new ArrayIndexOutOfBoundsException();
+    }
     this.size = size;
     clear();
   }
